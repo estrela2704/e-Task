@@ -27,7 +27,3 @@ Após seguir os passos de instalação, a aplicação estará pronta para uso. V
 ## Autor
 
 - Felipe Estrela de Albuquerque
-
-## Licença
-
-Este projeto está licenciado sob a Licença MIT. Consulte o arquivo [LICENSE](LICENSE) para obter mais detalhes.
