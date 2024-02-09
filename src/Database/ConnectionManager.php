@@ -1,6 +1,6 @@
 <?php
 
-namespace etask\Database;
+namespace Etask\Database;
 
 use Dotenv\Dotenv;
 

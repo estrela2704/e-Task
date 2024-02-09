@@ -1,0 +1,37 @@
+<div class="container mt-5 to-do-container">
+    <div class="card task">
+        <div class="card-header to-do-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Lista de Tarefas do <?= $user->getName() ?></h5>
+            <div class="d-flex">
+                <a href="/to-do/home/" class="btn btn-sm btn-primary">
+                    Voltar
+                </a>
+            </div>
+        </div>
+
+        <table class="table mb-0" width="100%">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-left">Nome</th>
+                    <th scope="col" width="40%">Descrição</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-right">Urgente</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if(isset($task)): ?>
+                    <tr class="task">
+                        <td class="text-left task-name"><?= $task->getName() ?></td>
+                        <td class="text-left task-name"><?= $task->getDescription() ?></td>
+                        <?php if($task->getStatus() == "em_andamento"): ?>
+                            <td><span class="badge badge-warning task-status">Pendente</span></td>
+                        <?php elseif($task->getStatus() == "concluida"): ?>
+                            <td><span class="badge badge-success task-status">Concluida</span></td>
+                        <?php endif; ?>
+                        <td class="text-right task-name"><?= $task->getUrgent() ?></td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>

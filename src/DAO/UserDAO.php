@@ -1,22 +1,26 @@
 <?php
-namespace etask\DAO;
+namespace Etask\DAO;
 
-use etask\Models\User;
-use etask\Interfaces\IUserDAO;
+use Etask\Models\User;
+use Etask\Interfaces\IUserDAO;
+use Etask\Database\ConnectionManager;
+use Exception;
 
 class UserDAO implements IUserDAO
 {
     private $conn;
 
-    public function __construct($conn)
+    public function __construct()
     {
-        $this->conn = $conn;
+        $driver = new ConnectionManager();
+        $this->conn = $driver->getConnection();
     }
 
     public function buildUser($userDATA)
     {
-
-        $user = new User($userDATA['name'], $userDATA['lastname'], $userDATA['email'], $userDATA['password'], $userDATA['token']);
+        $user = new User($userDATA['name'], $userDATA['lastname'], $userDATA['email']);
+        $user->setPassword($userDATA['password']);
+        $user->setToken($userDATA['token']);
 
         if (isset($userDATA['id'])) {
             $user->setId($userDATA['id']);
@@ -31,32 +35,41 @@ class UserDAO implements IUserDAO
 
     public function create(User $user)
     {
-        $stmt = $this->conn->prepare('INSERT INTO users(name, lastname, email, password, token) VALUES (:name, :lastname, :email, :password, :token)');
-        $stmt->bindValue(':name', $user->getName());
-        $stmt->bindValue(':lastname', $user->getLastname());
-        $stmt->bindValue(':email', $user->getEmail());
-        $stmt->bindValue(':password', $user->getPassword());
-        $stmt->bindValue(':token', $user->getToken());
+        try {
+            $stmt = $this->conn->prepare('INSERT INTO users(name, lastname, email, password, token) VALUES (:name, :lastname, :email, :password, :token)');
+            $stmt->bindValue(':name', $user->getName());
+            $stmt->bindValue(':lastname', $user->getLastname());
+            $stmt->bindValue(':email', $user->getEmail());
+            $stmt->bindValue(':password', $user->getPassword());
+            $stmt->bindValue(':token', $user->getToken());
 
-        $stmt->execute();
+            $stmt->execute();
 
-        $user->setId($this->conn->lastInsertId());
+            $user->setId($this->conn->lastInsertId());
 
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
     public function update(User $user)
     {
-        $stmt = $this->conn->prepare('UPDATE users SET name = :name, lastname = :lastname, image = :image WHERE id =:id');
+        try {
+            $stmt = $this->conn->prepare('UPDATE users SET name = :name, lastname = :lastname, image = :image, token = :token WHERE id =:id');
 
-        $stmt->bindValue(':name', $user->getName());
-        $stmt->bindValue(':lastname', $user->getLastname());
-        $stmt->bindValue(':image', $user->getImage());
-        $stmt->bindValue(':id', $user->getId());
+            $stmt->bindValue(':name', $user->getName());
+            $stmt->bindValue(':lastname', $user->getLastname());
+            $stmt->bindValue(':image', $user->getImage());
+            $stmt->bindValue(':id', $user->getId());
+            $stmt->bindValue(':token', $user->getToken());
 
-        $stmt->execute();
+            $stmt->execute();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
     public function findById($id)
     {
-        if ($id) {
+        try {
             $stmt = $this->conn->prepare('SELECT * FROM users WHERE id = :id');
 
             $stmt->bindValue(':id', $id);
@@ -72,15 +85,13 @@ class UserDAO implements IUserDAO
             } else {
                 return false;
             }
-
-        } else {
-            return false;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
-
     }
     public function findByEmail($email)
     {
-        if ($email) {
+        try {
             $stmt = $this->conn->prepare('SELECT * FROM users WHERE email = :email');
 
             $stmt->bindValue(':email', $email);
@@ -96,14 +107,13 @@ class UserDAO implements IUserDAO
             } else {
                 return false;
             }
-
-        } else {
-            return false;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
     public function findByToken($token)
     {
-        if ($token) {
+        try {
             $stmt = $this->conn->prepare('SELECT * FROM users WHERE token = :token');
 
             $stmt->bindValue(':token', $token);
@@ -119,9 +129,8 @@ class UserDAO implements IUserDAO
             } else {
                 return false;
             }
-
-        } else {
-            return false;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 }

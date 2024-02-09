@@ -12,13 +12,11 @@ class User
     private $password;
     private $token;
 
-    public function __construct($name, $lastname, $email, $password, $token)
+    public function __construct($name, $lastname, $email)
     {
         $this->name = $name;
         $this->lastname = $lastname;
         $this->email = $email;
-        $this->password = $password;
-        $this->token = $token;
     }
 
     public function getId()
@@ -61,6 +59,11 @@ class User
         return $this->token;
     }
 
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
     public function getImage()
     {
         return $this->image;
@@ -79,6 +82,8 @@ class User
     {
         $this->password = $password;
     }
+
+
 
 }
 

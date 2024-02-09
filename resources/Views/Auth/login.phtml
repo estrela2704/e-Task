@@ -1,0 +1,27 @@
+<div class="register_form container mt-5 mb-5 ">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-0">Entrar no e-task</h2>
+            <small>| Insira suas credenciais</small>
+            <!-- Início do formulário -->
+            <form action="/to-do/login" method="POST" class="mt-2">
+
+                <!-- Campo Email -->
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email">
+                </div>
+                <!-- Campo Senha -->
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+
+                <!-- Botão de Registro -->
+                <button type="submit" class="btn btn-primary full-btn">Entrar</button>
+            </form>
+            <!-- Fim do formulário -->
+            <script type='text/javascript'>toastr.{{type}} ('{{msg}}')</script>
+        </div>
+    </div>
+</div>

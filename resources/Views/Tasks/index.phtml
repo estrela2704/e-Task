@@ -1,0 +1,90 @@
+<div class="container mt-5 to-do-container">
+    <div class="card task">
+        <div class="card-header to-do-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Lista de Tarefas do <?= $user->getName() ?></h5>
+            <div class="d-flex">
+                <div class="mr-2">
+                        <form action="/to-do/task/search" class="input-group" method="POST">
+                            <input type="text" name="search" class="form-control form-control-sm custom-search" placeholder="Pesquisar">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn input-group-text btn-sm" type="button">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                </div>
+                <div class="mr-2">
+                    <div class="input-group">
+                        <form action="/to-do/home" method="POST">
+                            <select name="order" class="custom-select custom-select-sm custom-search" id="ordenarPor">
+                                <option disabled selected hidden>Ordernar por</option>
+                                <option value="urgencia">Urgência</option>
+                                <option value="recentes">Mais Recentes</option>
+                                <option value="antigos">Mais Antigos</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+                <?php if(isset($search)): ?>
+                    <div class="d-flex">
+                        <a href="/to-do/home/" class="btn btn-sm btn-primary">
+                            Voltar
+                        </a>
+                    </div>
+                    <?php else: ?>
+                        <a href="/to-do/task/add" class="btn btn-sm btn-primary">
+                            Adicionar
+                        </a>
+                    <?php endif; ?>
+            </div>
+        </div>
+
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-left">Nome</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-right">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if($tasks == []): ?>
+                    <tr class="task">
+                        <td class="text-left task-name">Você ainda não possui nenhuma tarefa!</td> 
+                    </tr>
+                <?php endif; ?>
+                <?php foreach($tasks as $task): ?>
+                    <tr class="task">
+                        <td class="text-left task-name"><?= $task->getName() ?></td>
+                        <?php if($task->getStatus() == "em_andamento"): ?>
+                            <td><span class="badge badge-warning task-status">Pendente</span></td>
+                        <?php elseif($task->getStatus() == "concluida"): ?>
+                            <td><span class="badge badge-success task-status">Concluida</span></td>
+                        <?php endif; ?>
+                        <td class="text-right">
+                            <div class="btn-group" role="group">
+                                <a href="/to-do/task/view/<?= $task->getId() ?>"type="button" class="btn btn-sm task-actions btn-view">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <?php if($task->getStatus() !== "concluida"): ?>
+                                    <a href="/to-do/task/edit/<?= $task->getId() ?>" type="button" class="btn btn-sm task-actions btn-edit">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                <?php endif;?>
+                                <a href="/to-do/task/delete/<?= $task->getId() ?>" type="button" class="btn btn-sm task-actions btn-trash" data-toggle="modal" data-target="#deleteTaskModal">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                <?php if($task->getStatus() !== "concluida"): ?>
+                                    <a href="/to-do/task/conclude/<?= $task->getId() ?>" type="button" class="btn btn-sm task-actions btn-ok" data-toggle="modal" data-target="#completeTaskModal">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                <?php endif;?>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                <!-- Adicione mais linhas conforme necessário -->
+            </tbody>
+        </table>
+    </div>
+</div>

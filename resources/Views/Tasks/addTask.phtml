@@ -1,0 +1,32 @@
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header to-do-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Adicionar Nova Tarefa</h5>
+            <div class="d-flex">
+                <a href="/to-do/home/" class="btn btn-sm btn-primary">
+                    Voltar
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <form action="/to-do/task/add" method="POST">
+                <div class="form-group">
+                    <label for="name">Nome da Tarefa:</label>
+                    <input type="text" class="form-control" id="name" name="name">
+                </div>
+                <div class="form-group">
+                    <label for="description">Descrição:</label>
+                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="urgent">Urgente:</label>
+                    <select class="form-control" id="urgent" name="urgent">
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Tarefa</button>
+            </form>
+        </div>
+    </div>
+</div>

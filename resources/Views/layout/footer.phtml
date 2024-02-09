@@ -1,0 +1,15 @@
+<link href="<?= BASE_URL ?>/assets/css/style.css" rel="stylesheet" />
+<?php if(isset($msg)) : ?>
+    <script type='text/javascript'>toastr.<?= $type ?>('<?= $msg ?>')</script>
+<?php endif; ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#ordenarPor').change(function(){
+            $(this).closest('form').submit();
+        });
+    });
+</script>
+</body>
+
+</html>

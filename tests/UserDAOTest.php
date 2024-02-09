@@ -5,71 +5,64 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 
 use PHPUnit\Framework\TestCase;
-use etask\DAO\UserDAO;
-use etask\Database\ConnectionManager;
+use Etask\DAO\UserDAO;
+use Etask\Services\AuthService;
 
 class UserDAOTest extends TestCase
 {
+    private $userDAO;
+    private $authService;
 
-    private $conn;
-
-    public function setUp(): void
+    protected function setUp(): void
     {
-
-        $driver = new ConnectionManager();
-
-        $this->conn = $driver->getConnection(); // Inicialize sua conexão aqui
+        // Configurações iniciais, incluindo injeção de dependência
+        $this->userDAO = new UserDAO;
+        $this->authService = new AuthService;
     }
-
     public function testCreate()
     {
         // Configuração de teste
-        $userDAO = new UserDAO($this->conn);
-
+        $password = "123";
+        $token = $this->authService->generateToken();
+        $finalPasword = $this->authService->generatePassword($password);
         $userData = [
             'name' => 'John',
             'lastname' => 'Doe',
             'email' => 'john.doe@example.com',
-            'password' => 'hashed_password',
-            'token' => '12345',
+            'token' => $token,
+            'password' => $finalPasword
         ];
 
-        $user = $userDAO->buildUser($userData);
+        $user = $this->userDAO->buildUser($userData);
 
-        $userDAO->create($user);
+        $this->userDAO->create($user);
 
         $this->assertGreaterThan(0, $user->getId(), 'O ID do usuário deve ser maior que zero após a criação.');
-
     }
 
     public function testFindByID()
     {
+        $id = 37;
 
-        $userDAO = new UserDAO($this->conn);
+        $user = $this->userDAO->findById($id);
 
-        $id = 6;
-
-        $user = $userDAO->findById($id);
-
-        $this->assertEquals(6, $user->getId(), 'O id do usuário deve ser igual.');
+        $this->assertEquals(37, $user->getId(), 'O id do usuário deve ser igual.');
 
     }
 
     public function testUpdate()
     {
 
-        $userDAO = new UserDAO($this->conn);
-
         $newName = "Johan";
         $newLastname = "Estrela";
         $image = "teste";
 
-        $user = $userDAO->findById(6);
+        $user = $this->userDAO->findById(37);
         $user->setName($newName);
         $user->setLastname($newLastname);
         $user->setImage($image);
 
-        $userDAO->update($user);
+        $this->userDAO->update($user);
 
         $this->assertEquals("Johan", $user->getName(), 'O nome do usuário deve ser Johan após a execução do teste.');
 
@@ -77,12 +70,9 @@ class UserDAOTest extends TestCase
 
     public function testFindByEmail()
     {
-
-        $userDAO = new UserDAO($this->conn);
-
         $email = "john.doe@example.com";
 
-        $user = $userDAO->findByEmail($email);
+        $user = $this->userDAO->findByEmail($email);
 
         $this->assertEquals("john.doe@example.com", $user->getEmail(), 'O email do usuário deve ser igual.');
     }
@@ -90,14 +80,11 @@ class UserDAOTest extends TestCase
     public function testFindByToken()
     {
 
-        $userDAO = new UserDAO($this->conn);
+        $token = "dcf938869077cd86f5c5cc8cd051ee4e3976a8048e412a47b8d42aa13bd66d734cf7a1aab9a68c0abd10cf0d4af649ddaa6c";
 
-        $token = "12345";
+        $user = $this->userDAO->findByToken($token);
 
-        $user = $userDAO->findByToken($token);
-
-        $this->assertEquals("12345", $user->getToken(), 'O token do usuário deve ser igual.');
-
+        $this->assertEquals("dcf938869077cd86f5c5cc8cd051ee4e3976a8048e412a47b8d42aa13bd66d734cf7a1aab9a68c0abd10cf0d4af649ddaa6c", $user->getToken(), 'O token do usuário deve ser igual.');
     }
 
 
